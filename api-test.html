@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>Registration API Test</h1>
+    <button id="testBtn">Test Registration</button>
+    <div id="result"></div>
+    <div id="error"></div>
+
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+            
+            resultDiv.innerHTML = '';
+            errorDiv.innerHTML = '';
+            
+            try {
+                console.log('Testing registration...');
+                const testData = {
+                    username: 'htmltestuser',
+                    email: 'htmltest@example.com',
+                    phone: '1112223333',
+                    password: 'htmltest123',
+                    confirmPassword: 'htmltest123'
+                };
+                
+                console.log('Sending test data:', testData);
+                
+                const response = await fetch('http://localhost:5000/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = '<h2 style="color: green;">Success!</h2><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                } else {
+                    errorDiv.innerHTML = '<h2 style="color: red;">Error:</h2><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                errorDiv.innerHTML = '<h2 style="color: red;">Network Error:</h2><pre>' + error.message + '</pre>';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,11 +1,13 @@
 import axios from 'axios';
 
+// Use relative path for Vercel deployment
 const API_BASE_URL = '/api';
 
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
+  timeout: 10000, // 10 second timeout
   headers: {
     'Content-Type': 'application/json',
   },
@@ -27,6 +29,7 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    console.error('API Interceptor Error:', error);
     if (error.response?.status === 401) {
       // Handle unauthorized access
       window.location.href = '/login';
@@ -38,10 +41,49 @@ api.interceptors.response.use(
 // Auth API calls
 export const registerUser = async (userData) => {
   try {
+    console.log('=== API SERVICE DEBUG ===');
+    console.log('API: Sending registration request to', API_BASE_URL + '/register');
+    console.log('API: Request data:', userData);
+    console.log('API: Base URL:', API_BASE_URL);
+    console.log('API: Axios config:', api.defaults);
+    
     const response = await api.post('/register', userData);
+    
+    console.log('API: Registration response received:', response);
+    console.log('API: Response status:', response.status);
+    console.log('API: Response data:', response.data);
+    console.log('API: Response headers:', response.headers);
+    console.log('=== API SERVICE SUCCESS ===');
+    
     return response.data;
   } catch (error) {
-    throw error.response?.data || { message: 'Registration failed' };
+    console.error('=== API SERVICE ERROR ===');
+    console.error('API: Registration error caught:', error);
+    console.error('API: Error name:', error.name);
+    console.error('API: Error message:', error.message);
+    console.error('API: Error code:', error.code);
+    console.error('API: Error stack:', error.stack);
+    console.error('API: Error config:', error.config);
+    console.error('API: Error response:', error.response);
+    
+    if (error.response) {
+      console.error('API: Error response data:', error.response.data);
+      console.error('API: Error response status:', error.response.status);
+      console.error('API: Error response headers:', error.response.headers);
+    }
+    
+    if (error.request) {
+      console.error('API: Error request:', error.request);
+    }
+    
+    const errorMessage = error.response?.data?.message || 
+                        error.message || 
+                        'Registration failed: Unknown error';
+    
+    console.error('API: Final error message:', errorMessage);
+    console.error('=== END API SERVICE ERROR ===');
+    
+    throw error.response?.data || { message: errorMessage };
   }
 };
 

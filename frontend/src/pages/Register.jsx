@@ -67,15 +67,22 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    console.log('=== REGISTRATION DEBUG ===');
+    console.log('Form submit triggered');
+    console.log('Current form data:', formData);
+    
     if (!validateForm()) {
+      console.log('Form validation failed');
+      console.log('Validation errors:', errors);
       return;
     }
     
+    console.log('Form validation passed');
     setLoading(true);
     setSuccess('');
     
     try {
-      await registerUser({
+      console.log('Sending registration request with data:', {
         username: formData.username,
         email: formData.email,
         phone: formData.phone,
@@ -83,14 +90,45 @@ const Register = () => {
         confirmPassword: formData.confirmPassword
       });
       
+      const response = await registerUser({
+        username: formData.username,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword
+      });
+      
+      console.log('Registration successful! Response:', response);
       setSuccess('Registration successful! Redirecting to login...');
       setTimeout(() => {
         navigate('/login');
       }, 2000);
     } catch (error) {
-      setErrors({ general: error.message || 'Registration failed' });
+      console.error('=== REGISTRATION ERROR ===');
+      console.error('Registration error caught in component:', error);
+      console.error('Error type:', typeof error);
+      console.error('Error keys:', Object.keys(error));
+      console.error('Error message:', error.message);
+      console.error('Error response:', error.response);
+      console.error('Full error object:', error);
+      
+      // Handle different error formats
+      let errorMessage = 'Registration failed';
+      if (error.message) {
+        errorMessage = error.message;
+      } else if (error.general) {
+        errorMessage = error.general;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      } else if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
+      console.log('Setting error message:', errorMessage);
+      setErrors({ general: errorMessage });
     } finally {
       setLoading(false);
+      console.log('=== END REGISTRATION DEBUG ===');
     }
   };
 
