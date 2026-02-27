@@ -1,12 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api2/(.*)",
-      "destination": "/api2/$1"
-    },
-    {
       "source": "/api/(.*)",
-      "destination": "/api2/$1"
+      "destination": "/api/$1"
     },
     {
       "source": "/(.*)",
@@ -14,23 +10,6 @@
     }
   ],
   "headers": [
-    {
-      "source": "/api2/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, POST, PUT, DELETE, OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type, Authorization"
-        }
-      ]
-    },
     {
       "source": "/api/(.*)",
       "headers": [
