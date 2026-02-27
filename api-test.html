@@ -4,8 +4,8 @@
     <title>API Test</title>
 </head>
 <body>
-    <h1>Registration API Test</h1>
-    <button id="testBtn">Test Registration</button>
+    <h1>API Test</h1>
+    <button id="testBtn">Test API</button>
     <div id="result"></div>
     <div id="error"></div>
 
@@ -18,18 +18,18 @@
             errorDiv.innerHTML = '';
             
             try {
-                console.log('Testing registration...');
+                console.log('Testing API...');
                 const testData = {
-                    username: 'htmltestuser',
-                    email: 'htmltest@example.com',
-                    phone: '1112223333',
-                    password: 'htmltest123',
-                    confirmPassword: 'htmltest123'
+                    username: 'apitestuser',
+                    email: 'api@test.com',
+                    phone: '1111111111',
+                    password: 'apitest123',
+                    confirmPassword: 'apitest123'
                 };
                 
                 console.log('Sending test data:', testData);
                 
-                const response = await fetch('http://localhost:5000/api/register', {
+                const response = await fetch('/api/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
